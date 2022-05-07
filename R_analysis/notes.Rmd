@@ -1,6 +1,8 @@
 ---
 title: "Notes of data_wrangling_tidyverse"
-output: word_document
+output:
+  word_document: default
+  pdf_document: default
 ---
 
 # Data Wrangling Process
@@ -16,3 +18,31 @@ Data was already split into test and train data sets.
 - A merged data set was created using rbind() and contained 2,919 rows and 82 columns.
 
 ## Step 2: 
+- The merged data set (train and test) has 80 features, with 6% of missing data.
+
+```{r setup, include = FALSE}
+library(naniar)
+View(features_df)
+```
+
+```{r, echo=FALSE}
+vis_miss(features_df, cluster=TRUE)
+```
+
+- Dropping columns:
+- The column 'Alley' measures the type of alley access to property in three levels (Grvl = Gravel, Pave	= Paved, NA = No alley access). NA is not in fact missing data but data stating that houses have no alley. The NA values were then replaced by 'NoAlley'.
+- The column 'PoolQC' measures the pool quality in five levels(Ex =Excellent, Gd = Good, TA = Average/Typical, Fa = Fair, NA = No Pool). NA is not in fact missing data but data stating that houses have no pool. The NA values were then replaced by 'NoPool'.
+- 'Fence' -> NA equals NoFence
+- 'MiscFeature' -> NA equals NoMisc
+
+- For MasVnrType (Masonry veneer type) and MasVnrArea (Masonry veneer area in square feet), the NA values correspond to the same rows and are not a reference to no masonry veneer. it looks like it's a true missing value. Deal with it by imputation? Method?
+
+- MSZoning - 4 NAs were replaced based on the most frequent MSZoning for each type of MSSubClass. This replacement shouldn't impact analysis, but no tests were made to confirm that.
+
+
+
+Dealing with date variables --> Lubridate
+Date variables = YearBuilt, YearRemodAdd, GarageYrBlt, MoSold, YrSold
+MoSold: Month Sold (MM)
+YrSold: Year Sold (YYYY)
+
